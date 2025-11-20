@@ -1,5 +1,13 @@
+import model.dao.DAOFactory;
+import model.entities.Cliente;
+
+import java.util.List;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("teste");
+        List<Cliente> clienteList = DAOFactory.criaClienteDAO().findAll();
+        for(Cliente c : clienteList){
+            System.out.println(c.toString());
+        }
     }
 }

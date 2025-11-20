@@ -1,5 +1,6 @@
 package model.dao.impl;
 
+import db.DB;
 import model.dao.ClienteDAO;
 import model.entities.Cliente;
 
@@ -33,6 +34,25 @@ public class ClienteDAOJDBC implements ClienteDAO {
         PreparedStatement st = null;
         ResultSet rs = null;
         List<Cliente> clientes = new ArrayList<>();
+        try{
+            st = conn.prepareStatement("select * from cliente");
+            rs = st.executeQuery();
+
+            while(rs.next()){
+
+                int id = rs.getInt("id");
+                String nome = rs.getString("nome");
+                String email = rs.getString("email");
+                Cliente c = new Cliente(id, nome, email);
+                clientes.add(c);
+            }
+        }catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            DB.closeStatement(st);
+            DB.closeResultSet(rs);
+        }
+
 
         return clientes;
     }
