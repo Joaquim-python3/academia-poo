@@ -37,5 +37,12 @@ public abstract class Pessoa {
         this.email = email;
     }
 
-    public abstract double calcularMensalidade();
+    @Override
+    public String toString() {
+        return "Pessoa{" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }

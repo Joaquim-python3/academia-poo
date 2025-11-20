@@ -7,16 +7,18 @@ public class Cliente extends Pessoa{
         super(id, nome, email);
     }
 
-    @Override
-    public double calcularMensalidade() {
-        return 0;
-    }
-
     public Matricula getMatricula() {
         return matricula;
     }
 
     public void setMatricula(Matricula matricula) {
         this.matricula = matricula;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString()+"Cliente{" +
+                "matricula=" + matricula +
+                '}';
     }
 }
