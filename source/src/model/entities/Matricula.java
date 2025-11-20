@@ -8,7 +8,7 @@ public class Matricula {
     private Integer id;
     private LocalDate dataInicio;
     private LocalDate dataFim;
-    private List<Treino> treino = new ArrayList<>(); // 1 → 1
+    private List<Treino> treino = new ArrayList<>(); // 1 -> N
 
     public Matricula() {}
 
