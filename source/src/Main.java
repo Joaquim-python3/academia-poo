@@ -1,6 +1,7 @@
 import model.dao.DAOFactory;
 import model.entities.Cliente;
 import model.entities.Matricula;
+import model.entities.Treino;
 
 import java.util.List;
 
@@ -14,6 +15,11 @@ public class Main {
         List<Matricula> matriculaList = DAOFactory.criaMatriculaDAO().findAll();
         for(Matricula m : matriculaList){
             System.out.println(m.toString());
+        }
+
+        List<Treino> treinoList = DAOFactory.criaTreinoDAO().findAll();
+        for(Treino t : treinoList){
+            System.out.println(t.toString());
         }
     }
 }

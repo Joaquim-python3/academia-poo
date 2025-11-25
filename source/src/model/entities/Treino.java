@@ -7,12 +7,12 @@ import java.util.List;
 public class Treino {
     private int id;
     private String nome;
-    private Date horarioInicio;
-    private Date horarioFim;
+    private LocalTime horarioInicio;
+    private LocalTime horarioFim;
 
     public Treino() {}
 
-    public Treino(int id, String nome, Date horarioInicio, Date horarioFim) {
+    public Treino(int id, String nome, LocalTime horarioInicio, LocalTime horarioFim) {
         this.id = id;
         this.nome = nome;
         this.horarioInicio = horarioInicio;
@@ -35,19 +35,19 @@ public class Treino {
         this.nome = nome;
     }
 
-    public Date getHorarioInicio() {
+    public LocalTime getHorarioInicio() {
         return horarioInicio;
     }
 
-    public void setHorarioInicio(Date horarioInicio) {
+    public void setHorarioInicio(LocalTime horarioInicio) {
         this.horarioInicio = horarioInicio;
     }
 
-    public Date getHorarioFim() {
+    public LocalTime getHorarioFim() {
         return horarioFim;
     }
 
-    public void setHorarioFim(Date horarioFim) {
+    public void setHorarioFim(LocalTime horarioFim) {
         this.horarioFim = horarioFim;
     }
 
