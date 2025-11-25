@@ -1,17 +1,18 @@
 package model.entities;
 
 import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
 
 public class Treino {
     private int id;
     private String nome;
-    private LocalTime horarioInicio;
-    private LocalTime horarioFim;
+    private Date horarioInicio;
+    private Date horarioFim;
 
     public Treino() {}
 
-    public Treino(int id, String nome, LocalTime horarioInicio, LocalTime horarioFim) {
+    public Treino(int id, String nome, Date horarioInicio, Date horarioFim) {
         this.id = id;
         this.nome = nome;
         this.horarioInicio = horarioInicio;
@@ -34,19 +35,19 @@ public class Treino {
         this.nome = nome;
     }
 
-    public LocalTime getHorarioInicio() {
+    public Date getHorarioInicio() {
         return horarioInicio;
     }
 
-    public void setHorarioInicio(LocalTime horarioInicio) {
+    public void setHorarioInicio(Date horarioInicio) {
         this.horarioInicio = horarioInicio;
     }
 
-    public LocalTime getHorarioFim() {
+    public Date getHorarioFim() {
         return horarioFim;
     }
 
-    public void setHorarioFim(LocalTime horarioFim) {
+    public void setHorarioFim(Date horarioFim) {
         this.horarioFim = horarioFim;
     }
 

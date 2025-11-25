@@ -53,7 +53,6 @@ public class ClienteDAOJDBC implements ClienteDAO {
             DB.closeResultSet(rs);
         }
 
-
         return clientes;
     }
 

@@ -2,17 +2,18 @@ package model.entities;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Matricula {
     private Integer id;
-    private LocalDate dataInicio;
-    private LocalDate dataFim;
+    private Date dataInicio;
+    private Date dataFim;
     private List<Treino> treino = new ArrayList<>(); // 1 -> N
 
     public Matricula() {}
 
-    public Matricula(Integer id, LocalDate dataInicio, LocalDate dataFim) {
+    public Matricula(Integer id, Date dataInicio, Date dataFim) {
         this.id = id;
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;
@@ -26,19 +27,19 @@ public class Matricula {
         this.id = id;
     }
 
-    public LocalDate getDataInicio() {
+    public Date getDataInicio() {
         return dataInicio;
     }
 
-    public void setDataInicio(LocalDate dataInicio) {
+    public void setDataInicio(Date dataInicio) {
         this.dataInicio = dataInicio;
     }
 
-    public LocalDate getDataFim() {
+    public Date getDataFim() {
         return dataFim;
     }
 
-    public void setDataFim(LocalDate dataFim) {
+    public void setDataFim(Date dataFim) {
         this.dataFim = dataFim;
     }
 

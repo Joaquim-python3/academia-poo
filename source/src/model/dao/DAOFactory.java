@@ -6,7 +6,7 @@ import model.dao.impl.MatriculaDAOJDBC;
 import model.dao.impl.TreinoDAOJDBC;
 
 public class DAOFactory {
-    // criar um DAOfactory para cada entidade
+    // Esses daos permitem acesso às funcoes JDBC
     public static ClienteDAO criaClienteDAO(){
         return new ClienteDAOJDBC(DB.getConnection());
     }
