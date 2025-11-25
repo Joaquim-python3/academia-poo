@@ -28,7 +28,8 @@ public class MatriculaDAOJDBC implements MatriculaDAO {
 
     @Override
     public Matricula findById(Integer id) {
-        return null;
+        Matricula matricula = new Matricula();
+        return matricula;
     }
 
     @Override

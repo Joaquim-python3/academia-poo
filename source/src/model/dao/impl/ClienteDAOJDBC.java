@@ -26,7 +26,8 @@ public class ClienteDAOJDBC implements ClienteDAO {
 
     @Override
     public Cliente findById(Integer id) {
-        return null;
+        Cliente cliente = new Cliente();
+        return cliente;
     }
 
     @Override

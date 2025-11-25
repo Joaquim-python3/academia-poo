@@ -9,14 +9,16 @@ public class Treino {
     private String nome;
     private LocalTime horarioInicio;
     private LocalTime horarioFim;
+    private Integer matriculaId;
 
     public Treino() {}
 
-    public Treino(int id, String nome, LocalTime horarioInicio, LocalTime horarioFim) {
+    public Treino(int id, String nome, LocalTime horarioInicio, LocalTime horarioFim, Integer matriculaId) {
         this.id = id;
         this.nome = nome;
         this.horarioInicio = horarioInicio;
         this.horarioFim = horarioFim;
+        this.matriculaId = matriculaId;
     }
 
     public int getId() {
@@ -51,6 +53,14 @@ public class Treino {
         this.horarioFim = horarioFim;
     }
 
+    public Integer getMatriculaId() {
+        return matriculaId;
+    }
+
+    public void setMatriculaId(Integer matriculaId) {
+        this.matriculaId = matriculaId;
+    }
+
     @Override
     public String toString() {
         return "Treino{" +
@@ -58,6 +68,7 @@ public class Treino {
                 ", nome='" + nome + '\'' +
                 ", horarioInicio=" + horarioInicio +
                 ", horarioFim=" + horarioFim +
+                ", matriculaId= "+ matriculaId+
                 '}';
     }
 }

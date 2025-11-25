@@ -7,6 +7,9 @@ public class Cliente extends Pessoa{
         super(id, nome, email);
     }
 
+    public Cliente() {
+    }
+
     public Matricula getMatricula() {
         return matricula;
     }

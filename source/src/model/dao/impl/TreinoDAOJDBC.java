@@ -28,7 +28,24 @@ public class TreinoDAOJDBC implements TreinoDAO {
 
     @Override
     public Treino findById(Integer id) {
-        return null;
+        Treino treino = new Treino();
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        try{
+            st = conn.prepareStatement("select * from treino where id=?");
+            st.setInt(1,id);
+            rs = st.executeQuery();
+            if(rs.next()){
+                treino.setId(rs.getInt("id"));
+                treino.setNome(rs.getString("nome"));
+                treino.setHorarioInicio(rs.getTime("horarioInicio").toLocalTime());
+                treino.setHorarioFim(rs.getTime("horarioFim").toLocalTime());
+                treino.setMatriculaId(rs.getInt("matricula_id"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return treino;
     }
 
     @Override
@@ -46,7 +63,8 @@ public class TreinoDAOJDBC implements TreinoDAO {
                 String nome = rs.getString("nome");
                 LocalTime horaInicio = rs.getTime("horarioInicio").toLocalTime();
                 LocalTime horaFim = rs.getTime("horarioFim").toLocalTime();
-                Treino t = new Treino(id, nome, horaInicio, horaFim);
+                Integer matriculaId = rs.getInt("matricula_id");
+                Treino t = new Treino(id, nome, horaInicio, horaFim,matriculaId);
                 treinos.add(t);
             }
         }catch (SQLException e) {
