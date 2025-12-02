@@ -40,7 +40,8 @@ public class MatriculaDAOJDBC implements MatriculaDAO {
                     matricula.setId(rs.getInt("id"));
                     matricula.setDataInicio(rs.getDate("dataInicio"));
                     matricula.setDataFim(rs.getDate("dataFim"));
-                    matricula.setTreino(DAOFactory.criaTreinoDAO().findTreinosByMatricula(rs.getInt("id")));
+                    // comentar linha abaixo para nao mostrar os treinos
+                    //matricula.setTreino(DAOFactory.criaTreinoDAO().findTreinosByMatricula(rs.getInt("id")));
                 }
             }catch (SQLException e) {
                 throw new RuntimeException(e);

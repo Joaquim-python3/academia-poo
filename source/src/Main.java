@@ -10,7 +10,7 @@ public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         System.out.println("selecione alguma opcao");
-        System.out.println("1- listar tudo");
+        System.out.println("1 - listar tudo");
         System.out.println("2 - procurar treino (id)");
         System.out.println("3 - procurar treinos pela matricula (id)");
         System.out.println("4 - procurar matricula (id)");
