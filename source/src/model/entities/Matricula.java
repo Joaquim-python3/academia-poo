@@ -27,9 +27,7 @@ public class Matricula {
         this.id = id;
     }
 
-    public Date getDataInicio() {
-        return dataInicio;
-    }
+    public Date getDataInicio() {return dataInicio;}
 
     public void setDataInicio(Date dataInicio) {
         this.dataInicio = dataInicio;

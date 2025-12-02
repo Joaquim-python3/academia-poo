@@ -2,12 +2,16 @@ package model.dao.impl;
 
 import db.DB;
 import model.dao.ClienteDAO;
+import model.dao.DAOFactory;
 import model.entities.Cliente;
+import model.entities.Matricula;
+import model.entities.Treino;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -45,6 +49,7 @@ public class ClienteDAOJDBC implements ClienteDAO {
                 String nome = rs.getString("nome");
                 String email = rs.getString("email");
                 Cliente c = new Cliente(id, nome, email);
+                c.setMatricula(DAOFactory.criaMatriculaDAO().findById(rs.getInt("matricula_id")));
                 clientes.add(c);
             }
         }catch (SQLException e) {

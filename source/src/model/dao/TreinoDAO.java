@@ -14,4 +14,6 @@ public interface TreinoDAO {
     void update(Treino obj);
 
     void deleteById(Integer id);
+
+    List<Treino> findTreinosByMatricula(Integer id);
 }

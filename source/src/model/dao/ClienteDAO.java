@@ -1,6 +1,7 @@
 package model.dao;
 
 import model.entities.Cliente;
+import model.entities.Matricula;
 
 import java.util.List;
 

@@ -85,4 +85,32 @@ public class TreinoDAOJDBC implements TreinoDAO {
     public void deleteById(Integer id) {
 
     }
+
+    @Override
+    public List<Treino> findTreinosByMatricula(Integer id) {
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        List<Treino> treinos = new ArrayList<>();
+        try{
+            st = conn.prepareStatement("select * from treino where matricula_id=?");
+            st.setInt(1,id);
+            rs = st.executeQuery();
+
+            while(rs.next()){
+                id = rs.getInt("id");
+                String nome = rs.getString("nome");
+                LocalTime horaInicio = rs.getTime("horarioInicio").toLocalTime();
+                LocalTime horaFim = rs.getTime("horarioFim").toLocalTime();
+                Integer matriculaId = rs.getInt("matricula_id");
+                Treino t = new Treino(id, nome, horaInicio, horaFim,matriculaId);
+                treinos.add(t);
+            }
+        }catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            DB.closeStatement(st);
+            DB.closeResultSet(rs);
+        }
+        return treinos;
+    }
 }
