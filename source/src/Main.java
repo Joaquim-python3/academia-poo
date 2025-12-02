@@ -14,6 +14,7 @@ public class Main {
         System.out.println("2 - procurar treino (id)");
         System.out.println("3 - procurar treinos pela matricula (id)");
         System.out.println("4 - procurar matricula (id)");
+        System.out.println("5 - procurar cliente (id)");
         int inputValue = sc.nextInt();
         switch (inputValue){
             case 1:
@@ -45,6 +46,11 @@ public class Main {
                 inputMatricula = sc.nextInt();
                 Matricula m = DAOFactory.criaMatriculaDAO().findById(inputMatricula);
                 System.out.println(m.toString());
+                break;
+            case 5:
+                int inputCliente = sc.nextInt();
+                Cliente cliente = DAOFactory.criaClienteDAO().findById(inputCliente);
+                System.out.println(cliente.toString());
                 break;
         }
 

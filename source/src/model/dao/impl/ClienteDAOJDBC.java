@@ -30,7 +30,28 @@ public class ClienteDAOJDBC implements ClienteDAO {
 
     @Override
     public Cliente findById(Integer id) {
+        PreparedStatement st = null;
+        ResultSet rs = null;
         Cliente cliente = new Cliente();
+        try{
+            st = conn.prepareStatement("select * from cliente where id=?");
+            st.setInt(1,id);
+            rs = st.executeQuery();
+            while(rs.next()){
+                id = rs.getInt("id");
+                String nome = rs.getString("nome");
+                String email = rs.getString("email");
+                cliente = new Cliente(id, nome, email);
+                cliente.setMatricula(DAOFactory.criaMatriculaDAO().findById(rs.getInt("matricula_id")));
+
+            }
+        }catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            DB.closeStatement(st);
+            DB.closeResultSet(rs);
+        }
+
         return cliente;
     }
 
