@@ -21,14 +21,16 @@ public class Main {
         System.out.println("5 - procurar cliente (id)");
         System.out.println("6 - criar matricula");
         System.out.println("7 - criar cliente");
+        System.out.println("8 - deleter cliente (id)");
         int inputValue = sc.nextInt();
+        sc.nextLine(); // limpar buffer (ler o enter)
         switch (inputValue){
             case 1:
-//                List<Cliente> clienteList = DAOFactory.criaClienteDAO().findAll();
-//                for(Cliente c : clienteList){System.out.println(c.toString());}
-
-                List<Matricula> matriculaList = DAOFactory.criaMatriculaDAO().findAll();
-                for(Matricula m : matriculaList){System.out.println(m.toString());}
+                List<Cliente> clienteList = DAOFactory.criaClienteDAO().findAll();
+                for(Cliente c : clienteList){System.out.println(c.toString());}
+//
+//                List<Matricula> matriculaList = DAOFactory.criaMatriculaDAO().findAll();
+//                for(Matricula m : matriculaList){System.out.println(m.toString());}
 
 //                List<Treino> treinoList = DAOFactory.criaTreinoDAO().findAll();
 //                for(Treino t : treinoList){System.out.println(t.toString());}
@@ -84,6 +86,16 @@ public class Main {
 
                 DAOFactory.criaClienteDAO().insert(newCliente);
                 System.out.println(newCliente.toString());
+
+                break;
+
+            case 8:
+                int inputDelete = sc.nextInt();
+                DAOFactory.criaClienteDAO().deleteById(inputDelete);
+
+                for (Cliente c: DAOFactory.criaClienteDAO().findAll()) {
+                    System.out.println(c.toString());
+                }
 
                 break;
         }

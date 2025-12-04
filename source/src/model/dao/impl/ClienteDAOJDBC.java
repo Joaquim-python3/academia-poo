@@ -104,6 +104,16 @@ public class ClienteDAOJDBC implements ClienteDAO {
 
     @Override
     public void deleteById(Integer id) {
-
+        PreparedStatement st = null;
+        try{
+            st = conn.prepareStatement("DELETE FROM Cliente WHERE id=?");
+            st.setInt(1, id);
+            int linhas = st.executeUpdate();
+            System.out.println("Linhas afetadas: " + linhas);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            DB.closeStatement(st);
+        }
     }
 }
