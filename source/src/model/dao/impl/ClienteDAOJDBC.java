@@ -7,10 +7,7 @@ import model.entities.Cliente;
 import model.entities.Matricula;
 import model.entities.Treino;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,8 +21,25 @@ public class ClienteDAOJDBC implements ClienteDAO {
     }
 
     @Override
-    public void insert(Cliente cliente) {
+    public void insert(Cliente newCliente) {
+        PreparedStatement st = null;
+        try{
+            st = conn.prepareStatement(
+                    "INSERT INTO Cliente (nome, email, matricula_id) VALUES (?,?,?)",
+                    Statement.RETURN_GENERATED_KEYS
+            );
 
+            st.setString(1, newCliente.getNome());
+            st.setString(2, newCliente.getEmail());
+            st.setInt(3, newCliente.getMatricula().getId()); // precisa necessariamente já ter uma matrícula
+
+            int linhas = st.executeUpdate();
+            System.out.println("Linhas afetadas: " + linhas);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            DB.closeStatement(st);
+        }
     }
 
     @Override

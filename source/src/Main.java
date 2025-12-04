@@ -20,6 +20,7 @@ public class Main {
         System.out.println("4 - procurar matricula (id)");
         System.out.println("5 - procurar cliente (id)");
         System.out.println("6 - criar matricula");
+        System.out.println("7 - criar cliente");
         int inputValue = sc.nextInt();
         switch (inputValue){
             case 1:
@@ -66,6 +67,23 @@ public class Main {
                 newMatricula.setDataFim(LocalDate.parse(inputDataFim));
 
                 DAOFactory.criaMatriculaDAO().insert(newMatricula);
+
+                System.out.println(newMatricula.toString());
+
+                break;
+
+            case 7:
+                Cliente newCliente = new Cliente();
+                String nome = sc.nextLine();
+                String email = sc.nextLine();
+                int matricula_id = sc.nextInt();
+
+                newCliente.setNome(nome);
+                newCliente.setEmail(email);
+                newCliente.setMatricula(DAOFactory.criaMatriculaDAO().findById(matricula_id)); // precisa necessariamente já ter uma matrícula
+
+                DAOFactory.criaClienteDAO().insert(newCliente);
+                System.out.println(newCliente.toString());
 
                 break;
         }
