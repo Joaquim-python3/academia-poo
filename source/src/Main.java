@@ -3,6 +3,10 @@ import model.entities.Cliente;
 import model.entities.Matricula;
 import model.entities.Treino;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -15,17 +19,18 @@ public class Main {
         System.out.println("3 - procurar treinos pela matricula (id)");
         System.out.println("4 - procurar matricula (id)");
         System.out.println("5 - procurar cliente (id)");
+        System.out.println("6 - criar matricula");
         int inputValue = sc.nextInt();
         switch (inputValue){
             case 1:
-                List<Cliente> clienteList = DAOFactory.criaClienteDAO().findAll();
-                for(Cliente c : clienteList){System.out.println(c.toString());}
+//                List<Cliente> clienteList = DAOFactory.criaClienteDAO().findAll();
+//                for(Cliente c : clienteList){System.out.println(c.toString());}
 
                 List<Matricula> matriculaList = DAOFactory.criaMatriculaDAO().findAll();
                 for(Matricula m : matriculaList){System.out.println(m.toString());}
 
-                List<Treino> treinoList = DAOFactory.criaTreinoDAO().findAll();
-                for(Treino t : treinoList){System.out.println(t.toString());}
+//                List<Treino> treinoList = DAOFactory.criaTreinoDAO().findAll();
+//                for(Treino t : treinoList){System.out.println(t.toString());}
                 break;
 
             case 2:
@@ -51,6 +56,17 @@ public class Main {
                 int inputCliente = sc.nextInt();
                 Cliente cliente = DAOFactory.criaClienteDAO().findById(inputCliente);
                 System.out.println(cliente.toString());
+                break;
+            case 6:
+                String inputDataInicio = sc.next();  // 2025-12-04
+                String inputDataFim = sc.next();     // 2025-12-29
+
+                Matricula newMatricula = new Matricula();
+                newMatricula.setDataInicio(LocalDate.parse(inputDataInicio));
+                newMatricula.setDataFim(LocalDate.parse(inputDataFim));
+
+                DAOFactory.criaMatriculaDAO().insert(newMatricula);
+
                 break;
         }
 

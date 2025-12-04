@@ -6,10 +6,7 @@ import model.dao.MatriculaDAO;
 import model.entities.Cliente;
 import model.entities.Matricula;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,8 +20,24 @@ public class MatriculaDAOJDBC implements MatriculaDAO {
         this.conn = conn;
     }
     @Override
-    public void insert(Matricula obj) {
+    public void insert(Matricula newMatricula) {
+        PreparedStatement st = null;
+        try{
+            st = conn.prepareStatement(
+                    "INSERT INTO Matricula (dataInicio, dataFim) VALUES (?, ?)",
+                    Statement.RETURN_GENERATED_KEYS
+            );
 
+            st.setDate(1, java.sql.Date.valueOf(newMatricula.getDataInicio()));
+            st.setDate(2, java.sql.Date.valueOf(newMatricula.getDataFim()));
+
+            int linhas = st.executeUpdate();
+            System.out.println("Linhas afetadas: " + linhas);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            DB.closeStatement(st);
+        }
     }
 
     @Override
@@ -38,13 +51,16 @@ public class MatriculaDAOJDBC implements MatriculaDAO {
                 rs = st.executeQuery();
                 if(rs.next()){
                     matricula.setId(rs.getInt("id"));
-                    matricula.setDataInicio(rs.getDate("dataInicio"));
-                    matricula.setDataFim(rs.getDate("dataFim"));
+                    matricula.setDataInicio(rs.getDate("dataInicio").toLocalDate());
+                    matricula.setDataFim(rs.getDate("dataFim").toLocalDate());
                     // descomentar linha abaixo para nao mostrar os treinos das matriculas
-                    //matricula.setTreino(DAOFactory.criaTreinoDAO().findTreinosByMatricula(rs.getInt("id")));
+                    matricula.setTreino(DAOFactory.criaTreinoDAO().findTreinosByMatricula(rs.getInt("id")));
                 }
             }catch (SQLException e) {
                 throw new RuntimeException(e);
+            } finally {
+                DB.closeStatement(st);
+                DB.closeResultSet(rs);
             }
         return matricula;
     }
@@ -60,8 +76,8 @@ public class MatriculaDAOJDBC implements MatriculaDAO {
 
             while(rs.next()){
                 int id = rs.getInt("id");
-                Date dataInicio = rs.getDate("dataInicio");
-                Date dataFim = rs.getDate("dataFim");
+                LocalDate dataInicio = rs.getDate("dataInicio").toLocalDate();
+                LocalDate dataFim = rs.getDate("dataFim").toLocalDate();
                 Matricula c = new Matricula(id, dataInicio, dataFim);
                 c.setTreino(DAOFactory.criaTreinoDAO().findTreinosByMatricula(id));
                 matriculas.add(c);
