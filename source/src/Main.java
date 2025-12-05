@@ -22,6 +22,7 @@ public class Main {
         System.out.println("6 - criar matricula");
         System.out.println("7 - criar cliente");
         System.out.println("8 - deleter cliente (id)");
+        System.out.println("9 - atualizar cliente (id)");
         int inputValue = sc.nextInt();
         sc.nextLine(); // limpar buffer (ler o enter)
         switch (inputValue){
@@ -98,9 +99,22 @@ public class Main {
                 }
 
                 break;
+
+            case 9:
+                Cliente updateCliente = new Cliente();
+                int id = sc.nextInt();
+                sc.nextLine();
+                nome = sc.nextLine();
+                email = sc.nextLine();
+
+                updateCliente.setNome(nome);
+                updateCliente.setEmail(email);
+
+                DAOFactory.criaClienteDAO().update(updateCliente, id);
+                break;
         }
 
-
+    sc.close();
 
     }
 }

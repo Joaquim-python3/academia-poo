@@ -98,8 +98,21 @@ public class ClienteDAOJDBC implements ClienteDAO {
     }
 
     @Override
-    public void update(Cliente cliente) {
+    public void update(Cliente cliente, Integer id) {
+        PreparedStatement st = null;
+        try{
+            st = conn.prepareStatement("UPDATE CLIENTE SET nome=?, email=? WHERE id=?");
+            st.setString(1,cliente.getNome());
+            st.setString(2, cliente.getEmail());
+            st.setInt(3, id);
 
+            int linhas = st.executeUpdate();
+            System.out.println("Linhas afetadas: " + linhas);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            DB.closeStatement(st);
+        }
     }
 
     @Override
