@@ -5,10 +5,7 @@ import model.dao.TreinoDAO;
 import model.entities.Matricula;
 import model.entities.Treino;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,7 +19,25 @@ public class TreinoDAOJDBC implements TreinoDAO {
         this.conn = conn;
     }
     @Override
-    public void insert(Treino obj) {
+    public void insert(Treino treino) {
+        PreparedStatement st = null;
+        try{
+            st = conn.prepareStatement(
+                    "INSERT INTO Treino (nome, horarioInicio, horarioFim, matricula_id) VALUES (?, ?, ?, ?)",
+                    Statement.RETURN_GENERATED_KEYS
+            );
+            st.setString(1, treino.getNome());
+            st.setTime(2, Time.valueOf(treino.getHorarioInicio()));
+            st.setTime(3, Time.valueOf(treino.getHorarioFim()));
+            st.setInt(4, treino.getMatriculaId());
+
+            int linhas = st.executeUpdate();
+            System.out.println("Linhas afetadas: " + linhas);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            DB.closeStatement(st);
+        }
 
     }
 

@@ -6,6 +6,7 @@ import model.entities.Treino;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
@@ -24,6 +25,7 @@ public class Main {
         System.out.println("8 - deleter cliente (id)");
         System.out.println("9 - atualizar cliente (id)");
         System.out.println("10 - atualizar matricula (id)");
+        System.out.println("11 - inserir treino (id)");
         int inputValue = sc.nextInt();
         sc.nextLine(); // limpar buffer (ler o enter)
         switch (inputValue){
@@ -126,6 +128,22 @@ public class Main {
                 DAOFactory.criaMatriculaDAO().update(updateMatricula, id);
 
                 break;
+
+            case 11:
+                Treino treino = new Treino();
+                nome = sc.nextLine();
+                String inputHoraInicio = sc.nextLine();
+                String inputHoraFim = sc.nextLine();
+                matricula_id = sc.nextInt();
+
+                treino.setNome(nome);
+                treino.setHorarioInicio(LocalTime.parse(inputHoraInicio));
+                treino.setHorarioFim(LocalTime.parse(inputHoraFim));
+                treino.setMatriculaId(matricula_id);
+
+                DAOFactory.criaTreinoDAO().insert(treino);
+                break;
+
         }
 
     sc.close();
