@@ -11,7 +11,7 @@ public interface MatriculaDAO {
 
     List<Matricula> findAll();
 
-    void update(Matricula obj);
+    void update(Matricula obj, Integer id);
 
     void deleteById(Integer id);
 }

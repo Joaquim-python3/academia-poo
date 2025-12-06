@@ -9,7 +9,6 @@ import model.entities.Matricula;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class MatriculaDAOJDBC implements MatriculaDAO {
@@ -92,8 +91,21 @@ public class MatriculaDAOJDBC implements MatriculaDAO {
     }
 
     @Override
-    public void update(Matricula obj) {
+    public void update(Matricula obj, Integer id) {
+        PreparedStatement st = null;
+        try{
+            st = conn.prepareStatement("UPDATE Matricula SET dataInicio=?, dataFIm=? WHERE id=?");
+            st.setDate(1, Date.valueOf(obj.getDataInicio()));
+            st.setDate(2,Date.valueOf(obj.getDataFim()));
+            st.setInt(3, id);
 
+            st.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            DB.closeStatement(st);
+        }
     }
 
     @Override

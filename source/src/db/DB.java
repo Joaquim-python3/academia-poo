@@ -6,7 +6,7 @@ public class DB {
     static Connection conn = null;
     public static Connection getConnection(){
         try{
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/academiasimples", "root", "1234");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/academiasimples", "root", "root");
         } catch (SQLException e){
             throw new RuntimeException(e);
         }
