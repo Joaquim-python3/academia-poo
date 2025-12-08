@@ -26,6 +26,7 @@ public class Main {
         System.out.println("9 - atualizar cliente (id)");
         System.out.println("10 - atualizar matricula (id)");
         System.out.println("11 - inserir treino (id)");
+        System.out.println("12 - deletar treino (id)");
         int inputValue = sc.nextInt();
         sc.nextLine(); // limpar buffer (ler o enter)
         switch (inputValue){
@@ -144,6 +145,11 @@ public class Main {
                 DAOFactory.criaTreinoDAO().insert(treino);
                 break;
 
+            case 12:
+                int inputIdTreino = sc.nextInt();
+
+                DAOFactory.criaTreinoDAO().deleteById(inputIdTreino);
+                break;
         }
 
     sc.close();

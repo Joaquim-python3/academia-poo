@@ -59,6 +59,9 @@ public class TreinoDAOJDBC implements TreinoDAO {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } finally {
+            DB.closeStatement(st);
+            DB.closeResultSet(rs);
         }
         return treino;
     }
@@ -98,7 +101,17 @@ public class TreinoDAOJDBC implements TreinoDAO {
 
     @Override
     public void deleteById(Integer id) {
-
+        PreparedStatement st = null;
+        try{
+            st = conn.prepareStatement("delete from Treino where id=?");
+            st.setInt(1,id);
+            int linhas = st.executeUpdate();
+            System.out.println("Linhas afetadas: " + linhas);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            DB.closeStatement(st);
+        }
     }
 
     @Override
