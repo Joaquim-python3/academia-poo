@@ -110,6 +110,27 @@ public class MatriculaDAOJDBC implements MatriculaDAO {
 
     @Override
     public void deleteById(Integer id) {
+        PreparedStatement st = null;
+        try{
+            st = conn.prepareStatement("DELETE FROM CLIENTE WHERE matricula_id=?");
+            st.setInt(1,id);
+            int linhasAfetadas = st.executeUpdate();
+            System.out.println("Linhas afetadas (cliente) = "+linhasAfetadas);
 
+            st = conn.prepareStatement("DELETE FROM TREINO WHERE matricula_id=?");
+            st.setInt(1,id);
+            linhasAfetadas = st.executeUpdate();
+            System.out.println("Linhas afetadas (treino) = "+linhasAfetadas);
+
+            st = conn.prepareStatement("DELETE FROM Matricula WHERE id=?");
+            st.setInt(1,id);
+            linhasAfetadas = st.executeUpdate();
+            System.out.println("Linhas afetadas (matricula) = "+linhasAfetadas);
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            DB.closeStatement(st);
+        }
     }
 }
