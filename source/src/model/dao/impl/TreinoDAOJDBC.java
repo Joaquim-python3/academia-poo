@@ -44,11 +44,14 @@ public class TreinoDAOJDBC implements TreinoDAO {
                 if (rs.next()) {
                     treino.setId(rs.getInt(1));
                 }
+            } else {
+                throw new DBException("Erro inesperado! Nenhuma linha inserida.");
             }
         } catch (SQLException e) {
             throw new DBException("Erro ao inserir treino");
         } finally {
             DB.closeStatement(st);
+            DB.closeResultSet(rs);
         }
     }
 

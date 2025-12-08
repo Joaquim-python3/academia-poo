@@ -6,6 +6,8 @@ import model.dao.DAOFactory;
 import model.entities.Cliente;
 import model.entities.Matricula;
 import model.entities.Treino;
+import model.exceptions.DBException;
+import model.exceptions.NotFoundException;
 
 import java.sql.*;
 import java.time.LocalTime;
@@ -23,6 +25,7 @@ public class ClienteDAOJDBC implements ClienteDAO {
     @Override
     public void insert(Cliente newCliente) {
         PreparedStatement st = null;
+        ResultSet rs = null;
         try{
             st = conn.prepareStatement(
                     "INSERT INTO Cliente (nome, email, matricula_id) VALUES (?,?,?)",
@@ -35,10 +38,21 @@ public class ClienteDAOJDBC implements ClienteDAO {
 
             int linhas = st.executeUpdate();
             System.out.println("Linhas afetadas: " + linhas);
+
+            // capturar id criado
+            if (linhas > 0) {
+                rs = st.getGeneratedKeys();
+                if (rs.next()) {
+                    newCliente.setId(rs.getInt(1));
+                }
+            } else {
+                throw new DBException("Erro inesperado! Nenhuma linha inserida.");
+            }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DBException("Erro ao inserir cliente. "+e.getMessage());
         } finally {
             DB.closeStatement(st);
+            DB.closeResultSet(rs);
         }
     }
 
@@ -51,22 +65,24 @@ public class ClienteDAOJDBC implements ClienteDAO {
             st = conn.prepareStatement("select * from cliente where id=?");
             st.setInt(1,id);
             rs = st.executeQuery();
-            while(rs.next()){
+            if(rs.next()){
                 id = rs.getInt("id");
                 String nome = rs.getString("nome");
                 String email = rs.getString("email");
                 cliente = new Cliente(id, nome, email);
                 cliente.setMatricula(DAOFactory.criaMatriculaDAO().findById(rs.getInt("matricula_id")));
 
+                return cliente;
             }
+            // excecao para caso nao ache o cliente
+            throw new NotFoundException("Cliente não encontrado para o ID = " + id);
+
         }catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DBException("Erro ao buscar cliente. "+e.getMessage());
         } finally {
             DB.closeStatement(st);
             DB.closeResultSet(rs);
         }
-
-        return cliente;
     }
 
     @Override
@@ -79,7 +95,6 @@ public class ClienteDAOJDBC implements ClienteDAO {
             rs = st.executeQuery();
 
             while(rs.next()){
-
                 int id = rs.getInt("id");
                 String nome = rs.getString("nome");
                 String email = rs.getString("email");
@@ -88,7 +103,7 @@ public class ClienteDAOJDBC implements ClienteDAO {
                 clientes.add(c);
             }
         }catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DBException("Erro ao buscar lista de clientes:. "+e.getMessage());
         } finally {
             DB.closeStatement(st);
             DB.closeResultSet(rs);
@@ -107,9 +122,14 @@ public class ClienteDAOJDBC implements ClienteDAO {
             st.setInt(3, id);
 
             int linhas = st.executeUpdate();
+            if(linhas == 0){
+                throw new NotFoundException("Nenhum cliente encontrado com o id="+id);
+            }
+
             System.out.println("Linhas afetadas: " + linhas);
+
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DBException("Erro ao atualizar cliente. "+e.getMessage());
         } finally {
             DB.closeStatement(st);
         }
@@ -121,10 +141,15 @@ public class ClienteDAOJDBC implements ClienteDAO {
         try{
             st = conn.prepareStatement("DELETE FROM Cliente WHERE id=?");
             st.setInt(1, id);
+
             int linhas = st.executeUpdate();
+
+            if (linhas == 0) {
+                throw new NotFoundException("Nenhum cliente encontrado com o id=" + id);
+            }
             System.out.println("Linhas afetadas: " + linhas);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DBException("Erro ao deletar cliente."+e.getMessage());
         } finally {
             DB.closeStatement(st);
         }
