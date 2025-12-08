@@ -36,11 +36,12 @@ public class MatriculaDAOJDBC implements MatriculaDAO {
 
             int linhas = st.executeUpdate();
 
+            // capturar id criado
             if (linhas > 0) {
                 rs = st.getGeneratedKeys();
                 if (rs.next()) {
                     int id = rs.getInt(1);
-                    newMatricula.setId(id);  // <-- IMPORTANTE!
+                    newMatricula.setId(id);
                 }
             } else {
                 throw new DBException("Erro inesperado! Nenhuma linha inserida.");

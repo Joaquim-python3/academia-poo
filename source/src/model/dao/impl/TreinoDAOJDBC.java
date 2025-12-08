@@ -4,6 +4,9 @@ import db.DB;
 import model.dao.TreinoDAO;
 import model.entities.Matricula;
 import model.entities.Treino;
+import model.exceptions.DBException;
+import model.exceptions.DbIntegrityException;
+import model.exceptions.NotFoundException;
 
 import java.sql.*;
 import java.time.LocalTime;
@@ -21,6 +24,7 @@ public class TreinoDAOJDBC implements TreinoDAO {
     @Override
     public void insert(Treino treino) {
         PreparedStatement st = null;
+        ResultSet rs = null;
         try{
             st = conn.prepareStatement(
                     "INSERT INTO Treino (nome, horarioInicio, horarioFim, matricula_id) VALUES (?, ?, ?, ?)",
@@ -33,12 +37,19 @@ public class TreinoDAOJDBC implements TreinoDAO {
 
             int linhas = st.executeUpdate();
             System.out.println("Linhas afetadas: " + linhas);
+
+            // capturar id criado
+            if (linhas > 0) {
+                rs = st.getGeneratedKeys();
+                if (rs.next()) {
+                    treino.setId(rs.getInt(1));
+                }
+            }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DBException("Erro ao inserir treino");
         } finally {
             DB.closeStatement(st);
         }
-
     }
 
     @Override
@@ -58,7 +69,7 @@ public class TreinoDAOJDBC implements TreinoDAO {
                 treino.setMatriculaId(rs.getInt("matricula_id"));
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new NotFoundException("Nao foi possível achar o treino pelo o id="+id);
         } finally {
             DB.closeStatement(st);
             DB.closeResultSet(rs);
@@ -79,14 +90,20 @@ public class TreinoDAOJDBC implements TreinoDAO {
 
                 int id = rs.getInt("id");
                 String nome = rs.getString("nome");
-                LocalTime horaInicio = rs.getTime("horarioInicio").toLocalTime();
-                LocalTime horaFim = rs.getTime("horarioFim").toLocalTime();
+
+                // ajuste para realizar verificações no banco
+                Time timeInicio = rs.getTime("horarioInicio");
+                Time timeFim = rs.getTime("horarioFim");
+
+                LocalTime horaInicio = (timeInicio != null) ? timeInicio.toLocalTime() : null;
+                LocalTime horaFim = (timeFim != null) ? timeFim.toLocalTime() : null;
+
                 Integer matriculaId = rs.getInt("matricula_id");
                 Treino t = new Treino(id, nome, horaInicio, horaFim,matriculaId);
                 treinos.add(t);
             }
         }catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DBException("Erro ao procurar Treinos");
         } finally {
             DB.closeStatement(st);
             DB.closeResultSet(rs);
@@ -103,10 +120,18 @@ public class TreinoDAOJDBC implements TreinoDAO {
             st.setTime(2, Time.valueOf(treino.getHorarioInicio()));
             st.setTime(3, Time.valueOf(treino.getHorarioFim()));
             st.setInt(4, id);
+
             int linhasAfetadas = st.executeUpdate();
-            System.out.println("Linhas Afetadas= "+linhasAfetadas);
+
+            if(linhasAfetadas == 0){
+                throw new DBException("Nenhum treino encontrado com o ID="+id);
+            }
+            System.out.println("Linhas Afetadas="+linhasAfetadas);
+
+        } catch (SQLIntegrityConstraintViolationException e) {
+            throw new DbIntegrityException("Não foi possível atualizar o treino: restrição de integridade violada.");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DBException("Erro ao atualizar treino: " + e.getMessage());
         } finally {
             DB.closeStatement(st);
         }
@@ -121,7 +146,7 @@ public class TreinoDAOJDBC implements TreinoDAO {
             int linhas = st.executeUpdate();
             System.out.println("Linhas afetadas: " + linhas);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DbIntegrityException("Erro ao deleter Treino");
         } finally {
             DB.closeStatement(st);
         }
@@ -147,7 +172,7 @@ public class TreinoDAOJDBC implements TreinoDAO {
                 treinos.add(t);
             }
         }catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DBException("Erro ao correlacionar Matriculas com Treino!");
         } finally {
             DB.closeStatement(st);
             DB.closeResultSet(rs);
