@@ -11,7 +11,7 @@ public interface TreinoDAO {
 
     List<Treino> findAll();
 
-    void update(Treino obj);
+    void update(Treino obj, Integer id);
 
     void deleteById(Integer id);
 

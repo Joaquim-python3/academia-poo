@@ -27,8 +27,9 @@ public class Main {
         System.out.println("10 - atualizar matricula (id)");
         System.out.println("11 - inserir treino (id)");
         System.out.println("12 - deletar treino (id)");
+        System.out.println("13 - atualizar treino (id)");
         int inputValue = sc.nextInt();
-        sc.nextLine(); // limpar buffer (ler o enter)
+        sc.nextLine(); // limpar buffer
         switch (inputValue){
             case 1:
                 List<Cliente> clienteList = DAOFactory.criaClienteDAO().findAll();
@@ -149,6 +150,22 @@ public class Main {
                 int inputIdTreino = sc.nextInt();
 
                 DAOFactory.criaTreinoDAO().deleteById(inputIdTreino);
+                break;
+
+            case 13:
+                Treino updateTreino = new Treino();
+                id = sc.nextInt();
+                sc.nextLine(); // limpar buffer
+                nome = sc.nextLine();
+                inputHoraInicio = sc.nextLine();
+                inputHoraFim = sc.nextLine();
+
+                updateTreino.setNome(nome);
+                updateTreino.setHorarioInicio(LocalTime.parse(inputHoraInicio));
+                updateTreino.setHorarioFim(LocalTime.parse(inputHoraFim));
+
+                DAOFactory.criaTreinoDAO().update(updateTreino, id);
+
                 break;
         }
 

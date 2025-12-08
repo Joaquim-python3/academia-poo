@@ -95,8 +95,21 @@ public class TreinoDAOJDBC implements TreinoDAO {
     }
 
     @Override
-    public void update(Treino obj) {
-
+    public void update(Treino treino, Integer id) {
+        PreparedStatement st = null;
+        try{
+            st = conn.prepareStatement("UPDATE Treino SET nome=?, horarioInicio=?, horarioFim=? WHERE id=?");
+            st.setString(1, treino.getNome());
+            st.setTime(2, Time.valueOf(treino.getHorarioInicio()));
+            st.setTime(3, Time.valueOf(treino.getHorarioFim()));
+            st.setInt(4, id);
+            int linhasAfetadas = st.executeUpdate();
+            System.out.println("Linhas Afetadas= "+linhasAfetadas);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            DB.closeStatement(st);
+        }
     }
 
     @Override
