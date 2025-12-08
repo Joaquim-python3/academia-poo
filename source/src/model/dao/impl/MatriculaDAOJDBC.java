@@ -3,8 +3,10 @@ package model.dao.impl;
 import db.DB;
 import model.dao.DAOFactory;
 import model.dao.MatriculaDAO;
+import model.dao.TreinoDAO;
 import model.entities.Cliente;
 import model.entities.Matricula;
+import model.exceptions.*;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -18,22 +20,35 @@ public class MatriculaDAOJDBC implements MatriculaDAO {
     public MatriculaDAOJDBC(Connection conn) {
         this.conn = conn;
     }
+
     @Override
     public void insert(Matricula newMatricula) {
         PreparedStatement st = null;
+        ResultSet rs = null;
         try{
             st = conn.prepareStatement(
                     "INSERT INTO Matricula (dataInicio, dataFim) VALUES (?, ?)",
                     Statement.RETURN_GENERATED_KEYS
             );
 
-            st.setDate(1, java.sql.Date.valueOf(newMatricula.getDataInicio()));
-            st.setDate(2, java.sql.Date.valueOf(newMatricula.getDataFim()));
+            st.setDate(1, Date.valueOf(newMatricula.getDataInicio()));
+            st.setDate(2, Date.valueOf(newMatricula.getDataFim()));
 
             int linhas = st.executeUpdate();
-            System.out.println("Linhas afetadas: " + linhas);
+
+            if (linhas > 0) {
+                rs = st.getGeneratedKeys();
+                if (rs.next()) {
+                    int id = rs.getInt(1);
+                    newMatricula.setId(id);  // <-- IMPORTANTE!
+                }
+            } else {
+                throw new DBException("Erro inesperado! Nenhuma linha inserida.");
+            }
+
+            System.out.println("Matrícula inserida: "+newMatricula.getId());
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DBException("Erro ao inserir matricula: "+e.getMessage());
         } finally {
             DB.closeStatement(st);
         }
@@ -52,16 +67,20 @@ public class MatriculaDAOJDBC implements MatriculaDAO {
                     matricula.setId(rs.getInt("id"));
                     matricula.setDataInicio(rs.getDate("dataInicio").toLocalDate());
                     matricula.setDataFim(rs.getDate("dataFim").toLocalDate());
+
+                    TreinoDAO treinoDAO = DAOFactory.criaTreinoDAO();
                     // descomentar linha abaixo para nao mostrar os treinos das matriculas
-                    matricula.setTreino(DAOFactory.criaTreinoDAO().findTreinosByMatricula(rs.getInt("id")));
+                    matricula.setTreino(treinoDAO.findTreinosByMatricula(rs.getInt("id")));
+
+                    return matricula;
                 }
+                return null;
             }catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new DBException("Erro ao buscar matrícula por ID "+e.getMessage());
             } finally {
                 DB.closeStatement(st);
                 DB.closeResultSet(rs);
             }
-        return matricula;
     }
 
     @Override
@@ -73,17 +92,21 @@ public class MatriculaDAOJDBC implements MatriculaDAO {
             st = conn.prepareStatement("select * from matricula");
             rs = st.executeQuery();
 
+            TreinoDAO treinoDAO = DAOFactory.criaTreinoDAO(); // mais eficiente que o método antigo
+            // método antigo: criava um TreinoDAO para cada Matricula
+
             while(rs.next()){
                 int id = rs.getInt("id");
                 LocalDate dataInicio = rs.getDate("dataInicio").toLocalDate();
                 LocalDate dataFim = rs.getDate("dataFim").toLocalDate();
                 Matricula c = new Matricula(id, dataInicio, dataFim);
-                c.setTreino(DAOFactory.criaTreinoDAO().findTreinosByMatricula(id));
+                c.setTreino(treinoDAO.findTreinosByMatricula(id));
                 matriculas.add(c);
             }
         }catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
+            throw new DBException("Erro ao buscar todas as matrículas: " + e.getMessage());
+        }
+        finally {
             DB.closeStatement(st);
             DB.closeResultSet(rs);
         }
@@ -99,11 +122,20 @@ public class MatriculaDAOJDBC implements MatriculaDAO {
             st.setDate(2,Date.valueOf(obj.getDataFim()));
             st.setInt(3, id);
 
-            st.executeUpdate();
+            int linhas = st.executeUpdate();
 
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
+            if (linhas == 0) {
+                throw new NotFoundException("Matricula com id " + id + " não encontrada.");
+            }
+
+        }
+        catch (SQLIntegrityConstraintViolationException e) {
+            throw new DbIntegrityException("Violação de integridade ao atualizar Matricula.");
+        }
+        catch (SQLException e) {
+            throw new DBException("Erro SQL ao atualizar Matricula: " + e.getMessage());
+        }
+        finally {
             DB.closeStatement(st);
         }
     }
@@ -127,9 +159,11 @@ public class MatriculaDAOJDBC implements MatriculaDAO {
             int linhasAfetadasMatricula = st.executeUpdate();
             System.out.println("Linhas afetadas (matricula) = "+linhasAfetadasMatricula);
 
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
+        } catch (SQLIntegrityConstraintViolationException e) {
+            throw new DbIntegrityException("Não é possível deletar uma matrícula com dependências!");
+        } catch (SQLException e){
+            throw new DBException(e.getMessage());
+        }finally {
             DB.closeStatement(st);
         }
     }
