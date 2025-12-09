@@ -160,18 +160,24 @@ public class Main {
 
                 case 12:
                     Treino treino = new Treino();
+                    System.out.println("Digite o id da matricula relacionada ao treino:");
+                    matricula_id = sc.nextInt();
                     System.out.println("Digite o nome do treino:");
+                    sc.nextLine();
                     nome = sc.nextLine();
                     System.out.println("Digite a hora de inicio do treino (HH:mm):");
                     String inputHoraInicio = sc.nextLine();
                     System.out.println("Digite a hora de fim do treino (HH:mm):");
                     String inputHoraFim = sc.nextLine();
-                    System.out.println("Digite o id da matricula relacionada ao treino:");
-                    matricula_id = sc.nextInt();
 
                     treino.setNome(nome);
-                    treino.setHorarioInicio(LocalTime.parse(inputHoraInicio));
-                    treino.setHorarioFim(LocalTime.parse(inputHoraFim));
+                    try{
+                        treino.setHorarioInicio(LocalTime.parse(inputHoraInicio));
+                        treino.setHorarioFim(LocalTime.parse(inputHoraFim));
+                    } catch (DateTimeParseException e){
+                        throw new ValidationException("Formato errado passado");
+                    }
+
                     treino.setMatriculaId(matricula_id);
 
                     DAOFactory.criaTreinoDAO().insert(treino);
