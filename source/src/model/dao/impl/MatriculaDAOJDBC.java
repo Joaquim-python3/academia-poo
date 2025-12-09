@@ -47,7 +47,7 @@ public class MatriculaDAOJDBC implements MatriculaDAO {
                 throw new DBException("Erro inesperado! Nenhuma linha inserida.");
             }
 
-            System.out.println("Matrícula inserida: "+newMatricula.getId());
+            System.out.println("Matrícula inserida, id: "+newMatricula.getId());
         } catch (SQLException e) {
             throw new DBException("Erro ao inserir matricula: "+e.getMessage());
         } finally {

@@ -35,13 +35,9 @@ public class Main {
             int inputValue = sc.nextInt();
             sc.nextLine(); // limpar buffer
 
-
-
             switch (inputValue) {
 
-                // ----------------------------------------------------------
                 // CLIENTE
-                // ----------------------------------------------------------
 
                 case 1:
                     List<Cliente> clienteList = DAOFactory.criaClienteDAO().findAll();
@@ -95,9 +91,7 @@ public class Main {
                     DAOFactory.criaClienteDAO().deleteById(inputDelete);
                     break;
 
-                // ----------------------------------------------------------
                 // MATRÍCULA
-                // ----------------------------------------------------------
 
                 case 6:
                     System.out.println("Digite o id da matricula:");
@@ -141,9 +135,7 @@ public class Main {
                     DAOFactory.criaMatriculaDAO().deleteById(inputIdMatricula);
                     break;
 
-                // ----------------------------------------------------------
                 // TREINO
-                // ----------------------------------------------------------
 
                 case 10:
                     System.out.println("Digite o id do treino:");
@@ -208,8 +200,6 @@ public class Main {
             }
         }catch (InputMismatchException e){
             System.out.println("Valor inválido digitado!");
-        }catch (RuntimeException e){
-            throw new RuntimeException("Ocorreu erro inesperado");
         }
 
         sc.close();

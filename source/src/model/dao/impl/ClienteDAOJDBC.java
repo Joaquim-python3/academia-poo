@@ -8,6 +8,7 @@ import model.entities.Matricula;
 import model.entities.Treino;
 import model.exceptions.DBException;
 import model.exceptions.NotFoundException;
+import model.exceptions.ValidationException;
 
 import java.sql.*;
 import java.time.LocalTime;
@@ -50,7 +51,9 @@ public class ClienteDAOJDBC implements ClienteDAO {
             }
         } catch (SQLException e) {
             throw new DBException("Erro ao inserir cliente. "+e.getMessage());
-        } finally {
+        } catch (NullPointerException e){
+            throw new DBException("Erro ao procurar matrícula. \n"+e.getMessage());
+        }finally {
             DB.closeStatement(st);
             DB.closeResultSet(rs);
         }
@@ -115,9 +118,10 @@ public class ClienteDAOJDBC implements ClienteDAO {
     @Override
     public void update(Cliente cliente, Integer id) {
         PreparedStatement st = null;
+        validarCliente(cliente);
         try{
             st = conn.prepareStatement("UPDATE CLIENTE SET nome=?, email=? WHERE id=?");
-            st.setString(1,cliente.getNome());
+            st.setString(1, cliente.getNome());
             st.setString(2, cliente.getEmail());
             st.setInt(3, id);
 
@@ -152,6 +156,26 @@ public class ClienteDAOJDBC implements ClienteDAO {
             throw new DBException("Erro ao deletar cliente."+e.getMessage());
         } finally {
             DB.closeStatement(st);
+        }
+    }
+
+    // metodo auxiliar para ser usado no update
+    public void validarCliente(Cliente cliente){
+
+        String nome = cliente.getNome();
+        String email = cliente.getEmail();
+
+        if(nome == null || nome.trim().isEmpty() || email == null || email.trim().isEmpty()){
+            throw new ValidationException("Valores vazios nao podem ser adicionados ao banco");
+        }
+        if(!nome.matches("^[A-Za-zÀ-ÿ ]+$")){
+            throw new ValidationException("Insira um nome válido");
+        }
+        if(!email.contains("@")){
+            throw new ValidationException("Email deve conter @");
+        }
+        if(!(email.endsWith(".com") || email.endsWith(".com.br"))){
+            throw new ValidationException("Email invalido");
         }
     }
 }

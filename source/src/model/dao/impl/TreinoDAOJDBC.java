@@ -70,6 +70,8 @@ public class TreinoDAOJDBC implements TreinoDAO {
                 treino.setHorarioInicio(rs.getTime("horarioInicio").toLocalTime());
                 treino.setHorarioFim(rs.getTime("horarioFim").toLocalTime());
                 treino.setMatriculaId(rs.getInt("matricula_id"));
+            }else{
+                throw new NotFoundException("Nao foi possivel achar o treino pelo id="+id);
             }
         } catch (SQLException e) {
             throw new NotFoundException("Nao foi possível achar o treino pelo o id="+id);
@@ -177,8 +179,12 @@ public class TreinoDAOJDBC implements TreinoDAO {
                 Treino t = new Treino(id, nome, horaInicio, horaFim,matriculaId);
                 treinos.add(t);
             }
+
+            if(treinos.isEmpty()){
+                throw new NotFoundException("Nenhum treino encontrado para a matrícula de id = " + id);
+            }
         }catch (SQLException e) {
-            throw new DBException("Erro ao correlacionar Matriculas com Treino!");
+            throw new DBException("Erro ao correlacionar");
         } finally {
             DB.closeStatement(st);
             DB.closeResultSet(rs);
