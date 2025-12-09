@@ -115,12 +115,13 @@ public class MatriculaDAOJDBC implements MatriculaDAO {
     }
 
     @Override
-    public void update(Matricula obj, Integer id) {
+    public void update(Matricula matricula, Integer id) {
         PreparedStatement st = null;
+        validarMatricula(matricula);
         try{
             st = conn.prepareStatement("UPDATE Matricula SET dataInicio=?, dataFIm=? WHERE id=?");
-            st.setDate(1, Date.valueOf(obj.getDataInicio()));
-            st.setDate(2,Date.valueOf(obj.getDataFim()));
+            st.setDate(1, Date.valueOf(matricula.getDataInicio()));
+            st.setDate(2,Date.valueOf(matricula.getDataFim()));
             st.setInt(3, id);
 
             int linhas = st.executeUpdate();
@@ -128,6 +129,8 @@ public class MatriculaDAOJDBC implements MatriculaDAO {
             if (linhas == 0) {
                 throw new NotFoundException("Matricula com id " + id + " não encontrada.");
             }
+
+            System.out.println("Linhas alteradas: "+linhas);
 
         }
         catch (SQLIntegrityConstraintViolationException e) {
@@ -145,16 +148,6 @@ public class MatriculaDAOJDBC implements MatriculaDAO {
     public void deleteById(Integer id) {
         PreparedStatement st = null;
         try{
-//            st = conn.prepareStatement("DELETE FROM CLIENTE WHERE matricula_id=?");
-//            st.setInt(1,id);
-//            int linhasAfetadas = st.executeUpdate();
-//            System.out.println("Linhas afetadas (cliente) = "+linhasAfetadas);
-//
-//            st = conn.prepareStatement("DELETE FROM TREINO WHERE matricula_id=?");
-//            st.setInt(1,id);
-//            linhasAfetadas = st.executeUpdate();
-//            System.out.println("Linhas afetadas (treino) = "+linhasAfetadas);
-
             st = conn.prepareStatement("DELETE FROM Matricula WHERE id=?");
             st.setInt(1,id);
             int linhasAfetadasMatricula = st.executeUpdate();
@@ -166,6 +159,12 @@ public class MatriculaDAOJDBC implements MatriculaDAO {
             throw new DBException(e.getMessage());
         }finally {
             DB.closeStatement(st);
+        }
+    }
+
+    public void validarMatricula(Matricula matricula){
+        if(matricula.getDataFim().equals(matricula.getDataInicio())){
+            throw new ValidationException("Datas iguais na criacao na matricula");
         }
     }
 }

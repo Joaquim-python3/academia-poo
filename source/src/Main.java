@@ -2,9 +2,11 @@ import model.dao.DAOFactory;
 import model.entities.Cliente;
 import model.entities.Matricula;
 import model.entities.Treino;
+import model.exceptions.ValidationException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
@@ -123,8 +125,12 @@ public class Main {
                     System.out.println("Digite a data de fim (yyyy-MM-dd):");
                     inputDataFim = sc.next();
 
-                    updateMatricula.setDataInicio(LocalDate.parse(inputDataInicio));
-                    updateMatricula.setDataFim(LocalDate.parse(inputDataFim));
+                    try{
+                        updateMatricula.setDataInicio(LocalDate.parse(inputDataInicio));
+                        updateMatricula.setDataFim(LocalDate.parse(inputDataFim));
+                    } catch (DateTimeParseException e){
+                        throw new ValidationException("Formato errado passado");
+                    }
 
                     DAOFactory.criaMatriculaDAO().update(updateMatricula, id);
                     break;
