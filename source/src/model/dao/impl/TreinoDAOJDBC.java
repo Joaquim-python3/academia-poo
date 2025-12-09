@@ -147,6 +147,9 @@ public class TreinoDAOJDBC implements TreinoDAO {
             st = conn.prepareStatement("delete from Treino where id=?");
             st.setInt(1,id);
             int linhas = st.executeUpdate();
+            if(linhas == 0){
+                throw new DbIntegrityException("Nenhum treino encontrado com o id="+id);
+            }
             System.out.println("Linhas afetadas: " + linhas);
         } catch (SQLException e) {
             throw new DbIntegrityException("Erro ao deleter Treino");
