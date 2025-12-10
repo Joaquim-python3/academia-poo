@@ -58,8 +58,12 @@ public class Main {
                     System.out.println("Digite o nome:");
                     String nome = sc.nextLine();
                     System.out.println("Digite o email:");
-
                     String email = sc.nextLine();
+
+                    Cliente.validarEmail(email);
+                    newCliente.setEmail(email);
+
+
                     System.out.println("Digite a matricula (ja deve existir uma matricula):");
                     int matricula_id = sc.nextInt();
 
@@ -80,6 +84,8 @@ public class Main {
                     nome = sc.nextLine();
                     System.out.println("Digite o novo email:");
                     email = sc.nextLine();
+
+                    Cliente.validarEmail(email);
 
                     updateCliente.setNome(nome);
                     updateCliente.setEmail(email);
