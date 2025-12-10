@@ -1,6 +1,7 @@
 package model.exceptions;
 
-public class EmailInvalidoException extends Throwable {
-    public EmailInvalidoException(String s) {
+public class EmailInvalidoException extends RuntimeException {
+    public EmailInvalidoException(String message) {
+        super(message);
     }
 }

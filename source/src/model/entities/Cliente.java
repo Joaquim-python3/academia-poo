@@ -24,7 +24,7 @@ public class Cliente extends Pessoa{
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
                     + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
-    public static void validarEmail(String email) throws EmailInvalidoException {
+    public static void validarEmail(String email) {
         if (email == null || !email.matches(EMAIL_PATTERN)) {
             throw new EmailInvalidoException("Email inválido!");
         }
