@@ -1,5 +1,7 @@
 package model.entities;
 
+import model.exceptions.DataInvalidaException;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,6 +49,12 @@ public class Matricula {
 
     public void setTreino(List<Treino> treino) {
         this.treino = treino;
+    }
+
+    public static void validarDatas(LocalDate inicio, LocalDate fim) throws DataInvalidaException {
+        if (inicio.isAfter(fim)) {
+            throw new DataInvalidaException("A data de início não pode ser maior que a data de fim!");
+        }
     }
 
     @Override

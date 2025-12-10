@@ -109,8 +109,18 @@ public class Main {
                     String inputDataFim = sc.next();
 
                     Matricula newMatricula = new Matricula();
-                    newMatricula.setDataInicio(LocalDate.parse(inputDataInicio));
-                    newMatricula.setDataFim(LocalDate.parse(inputDataFim));
+                    try {
+                        LocalDate dataInicio = LocalDate.parse(inputDataInicio);
+                        LocalDate dataFim = LocalDate.parse(inputDataFim);
+
+                        Matricula.validarDatas(dataInicio, dataFim);
+
+                        newMatricula.setDataInicio(dataInicio);
+                        newMatricula.setDataFim(dataFim);
+                    } catch (DateTimeParseException e) {
+                        throw new ValidationException("Formato errado passado!");
+                    }
+
 
                     DAOFactory.criaMatriculaDAO().insert(newMatricula);
                     System.out.println(newMatricula);
@@ -125,12 +135,18 @@ public class Main {
                     System.out.println("Digite a data de fim (yyyy-MM-dd):");
                     inputDataFim = sc.next();
 
-                    try{
-                        updateMatricula.setDataInicio(LocalDate.parse(inputDataInicio));
-                        updateMatricula.setDataFim(LocalDate.parse(inputDataFim));
-                    } catch (DateTimeParseException e){
-                        throw new ValidationException("Formato errado passado");
+                    try {
+                        LocalDate dataInicio = LocalDate.parse(inputDataInicio);
+                        LocalDate dataFim = LocalDate.parse(inputDataFim);
+
+                        Matricula.validarDatas(dataInicio, dataFim);
+
+                        updateMatricula.setDataInicio(dataInicio);
+                        updateMatricula.setDataFim(dataFim);
+                    } catch (DateTimeParseException e) {
+                        throw new ValidationException("Formato errado passado!");
                     }
+
 
                     DAOFactory.criaMatriculaDAO().update(updateMatricula, id);
                     break;
