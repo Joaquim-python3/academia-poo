@@ -171,12 +171,19 @@ public class Main {
                     String inputHoraFim = sc.nextLine();
 
                     treino.setNome(nome);
-                    try{
-                        treino.setHorarioInicio(LocalTime.parse(inputHoraInicio));
-                        treino.setHorarioFim(LocalTime.parse(inputHoraFim));
-                    } catch (DateTimeParseException e){
-                        throw new ValidationException("Formato errado passado");
+                    try {
+                        LocalTime horaInicio = LocalTime.parse(inputHoraInicio);
+                        LocalTime horaFim = LocalTime.parse(inputHoraFim);
+
+                        // valida
+                        Treino.validarHoras(horaInicio, horaFim);
+
+                        treino.setHorarioInicio(horaInicio);
+                        treino.setHorarioFim(horaFim);
+                    } catch (DateTimeParseException e) {
+                        throw new ValidationException("Formato de hora inválido!");
                     }
+
 
                     treino.setMatriculaId(matricula_id);
 
@@ -197,8 +204,17 @@ public class Main {
                     inputHoraFim = sc.nextLine();
 
                     updateTreino.setNome(nome);
-                    updateTreino.setHorarioInicio(LocalTime.parse(inputHoraInicio));
-                    updateTreino.setHorarioFim(LocalTime.parse(inputHoraFim));
+                    try {
+                        LocalTime horaInicio = LocalTime.parse(inputHoraInicio);
+                        LocalTime horaFim = LocalTime.parse(inputHoraFim);
+
+                        Treino.validarHoras(horaInicio, horaFim);
+
+                        updateTreino.setHorarioInicio(horaInicio);
+                        updateTreino.setHorarioFim(horaFim);
+                    } catch (DateTimeParseException e) {
+                        throw new ValidationException("Formato de hora inválido!");
+                    }
 
                     DAOFactory.criaTreinoDAO().update(updateTreino, id);
                     break;

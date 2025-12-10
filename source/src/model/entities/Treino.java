@@ -1,5 +1,7 @@
 package model.entities;
 
+import model.exceptions.HoraInvalidaException;
+
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
@@ -60,6 +62,13 @@ public class Treino {
     public void setMatriculaId(Integer matriculaId) {
         this.matriculaId = matriculaId;
     }
+
+    public static void validarHoras(LocalTime inicio, LocalTime fim) throws HoraInvalidaException {
+        if (inicio.isAfter(fim)) {
+            throw new HoraInvalidaException("A hora inicial não pode ser maior do que a hora final!");
+        }
+    }
+
 
     @Override
     public String toString() {
